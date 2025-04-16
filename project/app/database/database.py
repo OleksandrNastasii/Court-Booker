@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session, declarative_base
 
 from ..config.config import DB_route
 
-engine = create_engine(f"{DB_route.SQLALCHEMY_DATABASE_URI}")
+engine = create_engine(f"{DB_route.DATABASE_URI}")
 db_session = scoped_session(sessionmaker(autocommit=False, bind=engine))
 
 Base = declarative_base()
