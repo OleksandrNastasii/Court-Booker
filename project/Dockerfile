@@ -1,6 +1,8 @@
 # Use an official Python runtime as the base image
 FROM python:3.9-slim
 
+RUN apt-get update && apt-get install -y postgresql-client
+
 # Set the working directory in the container
 WORKDIR /app/project
 
@@ -12,6 +14,9 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Ensure we're at the correct level (in the parent folder)
 WORKDIR /app
+
+COPY wait-for-postgres.sh /wait-for-postgres.sh
+RUN chmod +x /wait-for-postgres.sh
 
 # Run the project as a module
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "main:app"]
