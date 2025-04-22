@@ -1,63 +1,95 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, request, jsonify, flash
 from flask_login import login_user
+from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
+from marshmallow import ValidationError
 
 from ..database.database import db_session
 from ..models.user_model import UserModel
+from app.schemas.user_schemas import UserCreateSchema, UserLoginSchema
+
+user_create_schema = UserCreateSchema()
+user_login_schema = UserLoginSchema()
 
 auth = Blueprint('auth', __name__)
+
+from flask import jsonify
 
 @auth.route('/login', methods=["POST", "GET"])
 def login():
     if request.method == "POST":
-        email = request.form.get('email')
-        password = request.form.get('password')
-        #work on remember option
-        remember = True if request.form.get('remember') else False
+        try:
+            data = request.get_json()
 
-        user = UserModel.query.filter_by(email=email).first()
+            # Validate using schema
+            validated_data = user_login_schema.load(data)
 
-        if not user or not check_password_hash(user.password, password):
-            flash('Please check your login details and try again.')
-            return redirect(url_for('auth.login'))
+            email = validated_data['email']
+            password = validated_data['password']
 
-        login_user(user, remember=remember)
+            user = UserModel.query.filter_by(email=email).first()
 
-        return redirect(url_for('user_routes.profile'))
+            if not user or not check_password_hash(user.password, password):
+                return jsonify({"message": "Invalid email or password"}), 401
+
+            login_user(user)
+            return jsonify({"message": "Login successful"}), 200
+
+        except ValidationError as err:
+            return jsonify({"detail": err.messages}), 400
+        
+        except Exception:
+            return jsonify({"message": "Internal server error"}), 500
 
     return render_template("login.html")
+
+
+
 
 @auth.route('/signup', methods=["POST", "GET"])
 def signup():
     if request.method == "POST":
-        email = request.form.get('email')
-        name = request.form.get('name')
-        password = request.form.get('password')
+        try:
+            data = request.get_json()
 
+            # Validate input using schema
+            validated_data = user_create_schema.load(data)
 
-        if not email or not name or not password:
-            #flash does work, repair it tomorrow
-            flash("All fields are required!")
-            return redirect(url_for('auth.signup'))
+            name = validated_data['name'].strip()
+            email = validated_data['email'].strip()
+            password = validated_data['password']
 
-        user = UserModel.query.filter_by(email=email).first()
+            # Check if user already exists
+            existing_user = UserModel.query.filter_by(email=email).first()
+            if existing_user:
+                flash("User with this email already exists")
+                return jsonify({"detail": "User with this email already exists."}), 409
 
-        if user:
-            flash('Email address already exists')
-            return redirect(url_for('auth.login'))
+            # Create new user with hashed password
+            new_user = UserModel(
+                email=email,
+                name=name,
+                password=generate_password_hash(password, method='pbkdf2:sha256')
+            )
 
-        new_user = UserModel(
-            email=email, 
-            name=name, 
-            password=generate_password_hash(password,
-                                             method='pbkdf2:sha256')
-                                            )
+            db_session.add(new_user)
+            db_session.commit()
 
-        db_session.add(new_user)
-        db_session.commit()
+            return jsonify({"message": "User created successfully!"}), 201
 
-        return redirect(url_for('auth.login'))
+        except ValidationError as err:
+            return jsonify({"detail": err.messages}), 422
+
+        except SQLAlchemyError:
+            db_session.rollback()
+            return jsonify({"detail": "Database error occurred."}), 500
+
+        except Exception:
+            return jsonify({"detail": "Internal server error."}), 500
+
+    # For GET requests, render the signup page
     return render_template('signup.html')
+
 
 @auth.route('/logout')
 def logout():

@@ -12,7 +12,9 @@ def create_app():
 
     app.config.from_object(Secret_Key)
 
-    from .models.user_model import UserModel
+    from app.models.user_model import UserModel, BookingModel, CourtModel
+    # from .models.booking_model import BookingModel
+    # from .models.playing_court_model import CourtModel
 
     init_db()
 
@@ -28,5 +30,17 @@ def create_app():
 
     from app.routes.user_routes import user_routes as user_routes_blueprint
     app.register_blueprint(user_routes_blueprint)
+
+    from app.routes.users import user as users_blueprint
+    app.register_blueprint(users_blueprint)
+
+    from app.routes.booking.booking import booking as booking_blueprint
+    app.register_blueprint(booking_blueprint)
+
+    from app.routes.booking.verify import verify as verify_blueprint
+    app.register_blueprint(verify_blueprint)
+
+    from app.routes.courts import courts_bp
+    app.register_blueprint(courts_bp)
 
     return app

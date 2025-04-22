@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Sign Up</title>
-    <!-- Optional: Bootstrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -25,20 +24,23 @@
                 {% endif %}
                 {% endwith %}
 
-                <form action="{{ url_for('auth.signup') }}" method="POST">
+                <form id="signup-form">
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" name="name" id="name" required>
+                        <input type="text" class="form-control" name="name" id="name">
+                        <div class="invalid-feedback">Name is required!</div>
                     </div>
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" name="email" id="email" required>
+                        <input type="email" class="form-control" name="email" id="email">
+                        <div class="invalid-feedback">Email is required!</div>
                     </div>
 
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password" id="password" required>
+                        <input type="password" class="form-control" name="password" id="password">
+                        <div class="invalid-feedback">Password is required to be at least 8 characters!</div>
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100">Sign Up</button>
@@ -52,6 +54,63 @@
             </div>
         </div>
     </div>
+
+    <!-- JavaScript to handle JSON POST and custom validation -->
+    <script>
+        document.getElementById("signup-form").addEventListener("submit", async function (e) {
+            e.preventDefault(); // Prevent default form action
+
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            // Clear previous error messages
+            document.querySelectorAll(".form-control").forEach(input => {
+                input.classList.remove("is-invalid");
+            });
+
+            let valid = true;
+
+            // Validate fields
+            if (!name) {
+                document.getElementById("name").classList.add("is-invalid");
+                valid = false;
+            }
+            if (!email) {
+                document.getElementById("email").classList.add("is-invalid");
+                valid = false;
+            }
+            if (!password || password.length < 8) {
+                document.getElementById("password").classList.add("is-invalid");
+                valid = false;
+            }
+
+            if (!valid) {
+                return; // Stop form submission if any field is invalid
+            }
+
+            const response = await fetch("{{ url_for('auth.signup') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert("✅ Sign up successful!");
+                window.location.href = "{{ url_for('auth.login') }}";
+            } else {
+                alert("❌ Sign up failed: " + (result.detail || result.message || "Unknown error"));
+            }
+        });
+    </script>
 
 </body>
 

@@ -1,17 +1,17 @@
 services:
-  flask_app:
+  flask_app-test:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: flask
+      dockerfile: Dockerfile.test
+    container_name: flask-test
     restart: always
     depends_on:
-      - db
+      - db-test
     environment:
       POSTGRESQL_USER: ${POSTGRESQL_USER}
       POSTGRESQL_PASSWORD: ${POSTGRESQL_PASSWORD}
       POSTGRESQL_DB: ${POSTGRESQL_DATABASE}
-      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_HOST: ${DATABASE_HOST_TEST}
       POSTGRESQL_DATABASE_PORT: 5432
     ports:
       - "5000:5000"
@@ -19,12 +19,12 @@ services:
       - mynetwork
     env_file:
       - .env
-    command: [ "/wait-for-postgres.sh", "db", "gunicorn", "-w", "4", "--timeout", "120", "--bind", "0.0.0.0:5000", "main:app" ]
+    command: [ "/bin/sh", "-c", "/wait-for-postgres.sh db-test && gunicorn -w 4 --timeout 120 --bind 0.0.0.0:5000 main:app" ]
 
-  db:
+  db-test:
     image: postgres:15
     platform: linux/amd64
-    container_name: postgresql_db
+    container_name: postgresql_db-test
     restart: always
     environment:
       POSTGRES_DB: ${POSTGRESQL_DATABASE}
