@@ -1,4 +1,5 @@
 from flask import request, jsonify, send_file, Blueprint
+from flask_login import current_user
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime, timezone
 import time
@@ -21,7 +22,7 @@ def create_booking():
         data = request.get_json()
 
         court_id = data.get("court_id")
-        user_id = data.get("user_id")
+        user_id = current_user.id
         start_time = datetime.fromisoformat(data.get("start_time"))
         end_time = datetime.fromisoformat(data.get("end_time"))
 

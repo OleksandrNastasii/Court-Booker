@@ -15,10 +15,8 @@
         <form method="post" action="/bookings" onsubmit="return submitBooking(event)">
             <input type="hidden" name="court_id" id="court_id" value="{{ court.id }}">
 
-            <div class="mb-3">
-                <label for="user_id" class="form-label">User ID</label>
-                <input type="number" class="form-control" id="user_id" name="user_id" required>
-            </div>
+            <!-- Automatically set the user ID from the current user -->
+            <input type="hidden" name="user_id" id="user_id" value="{{ current_user.id }}">
 
             <div class="mb-3">
                 <label for="start_time" class="form-label">Start Time</label>
