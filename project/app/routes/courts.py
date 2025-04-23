@@ -1,26 +1,50 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
+from flask_login import login_required
+from datetime import datetime
 
 from app.database.database import db_session
-from app.models.user_model import CourtModel
+from app.models.user_model import CourtModel, BookingModel
 
 courts_bp = Blueprint("courts", __name__)
 
+
+
 @courts_bp.route("/courts", methods=["GET", "POST"])
-def handle_courts():
-    if request.method == 'GET':
-        # Fetch all users
+@login_required
+def courts_page():
+    
+    if request.method == "GET":
+        start_time_str = request.args.get('start_time')  # Get start time from query params
+        end_time_str = request.args.get('end_time')      # Get end time from query params
+
+        courts = CourtModel.query.all()
+
+        if not courts:
+            return jsonify({"detail": "No courts found."}), 404
+
+        if not start_time_str or not end_time_str:
+            # If no times are selected, return all courts
+            return render_template('courts.html', courts=courts)
+
         try:
-            courts = CourtModel.query.all()
+            start_time = datetime.fromisoformat(start_time_str)
+            end_time = datetime.fromisoformat(end_time_str)
+        except ValueError:
+            return jsonify({"detail": "Invalid time format. Use ISO 8601 format."}), 400
 
-            if not courts:
-                return jsonify({"detail": "No courts found."}), 200
+        available_courts = []
+        for court in courts:
+            bookings = BookingModel.query.filter(
+                BookingModel.court_id == court.id,
+                BookingModel.start_time < end_time,
+                BookingModel.end_time > start_time
+            ).all()
 
-            return jsonify([court.show_court() for court in courts]), 200
+            if not bookings:
+                available_courts.append(court)
 
-        except Exception:
-            # You can also log the error here for debugging
-            return jsonify({"detail": "Internal server error."}), 500
-
+        return render_template('courts.html', courts=available_courts)
+    
     if request.method == "POST":
         data = request.get_json()
         name = data.get("name")

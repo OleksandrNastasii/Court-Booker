@@ -69,7 +69,7 @@
 
             if (response.ok) {
                 alert("✅ Login successful!");
-                window.location.href = "{{ url_for('user_routes.profile') }}";
+                window.location.href = "{{ url_for('courts.courts_page') }}";
             } else {
                 let message = "Unknown error";
                 if (result.detail) {

@@ -27,8 +27,8 @@ class BookingModel(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     court_id = Column(Integer, ForeignKey('courts.id'), nullable=False)
-    start_time = Column(DateTime, nullable=False)
-    end_time = Column(DateTime, nullable=False)
+    start_time = Column(DateTime(timezone=True), nullable=False)
+    end_time = Column(DateTime(timezone=True), nullable=False)
     token = Column(String(255), unique=True)
     status = Column(Boolean, default=True)
 

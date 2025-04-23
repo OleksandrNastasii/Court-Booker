@@ -1,9 +1,12 @@
+from threading import Thread
 from flask import Flask
 from flask_login import LoginManager
 from dotenv import load_dotenv
 
 from .database.database import init_db
 from .config.config import Secret_Key
+from app.routes.booking.booking import booking as booking_blueprint
+
 
 load_dotenv()
 
@@ -20,6 +23,7 @@ def create_app():
 
     login_manager = LoginManager()
     login_manager.init_app(app)
+    # login_manager.login_view = 'auth.login'
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -34,8 +38,10 @@ def create_app():
     from app.routes.users import user as users_blueprint
     app.register_blueprint(users_blueprint)
 
-    from app.routes.booking.booking import booking as booking_blueprint
     app.register_blueprint(booking_blueprint)
+
+    from app.routes.booking.book import book
+    app.register_blueprint(book)
 
     from app.routes.booking.verify import verify as verify_blueprint
     app.register_blueprint(verify_blueprint)
