@@ -1,4 +1,3 @@
-from threading import Thread
 from flask import Flask
 from flask_login import LoginManager
 from dotenv import load_dotenv
@@ -16,14 +15,11 @@ def create_app():
     app.config.from_object(Secret_Key)
 
     from app.models.user_model import UserModel, BookingModel, CourtModel
-    # from .models.booking_model import BookingModel
-    # from .models.playing_court_model import CourtModel
 
     init_db()
 
     login_manager = LoginManager()
     login_manager.init_app(app)
-    # login_manager.login_view = 'auth.login'
 
     @login_manager.user_loader
     def load_user(user_id):

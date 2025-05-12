@@ -23,7 +23,7 @@ def post_request(payload=create_payload(), endpoint=USERS_URL):
 def wait_for_api(timeout=15):
     for _ in range(timeout):
         try:
-            response = requests.get(f"{BASE_URL}/login")  # or your health endpoint
+            response = requests.get(f"{BASE_URL}/login")
             if response.status_code == 200:
                 return
         except requests.exceptions.ConnectionError:

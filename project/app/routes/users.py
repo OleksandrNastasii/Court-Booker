@@ -76,7 +76,6 @@ def get_put_delete(user_id):
             return jsonify({"detail": "Internal server error"}), 500
 
     elif request.method == 'PUT':
-        # Update user details
         try:
             data = request.get_json()
             if not data:

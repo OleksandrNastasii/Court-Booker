@@ -22,7 +22,6 @@ def login():
         try:
             data = request.get_json()
 
-            # Validate using schema
             validated_data = user_login_schema.load(data)
 
             email = validated_data['email']
@@ -48,7 +47,7 @@ def login():
             return jsonify({"detail": err.messages}), 400
         
         except Exception:
-            traceback.print_exc()  # This logs the actual error to your console
+            traceback.print_exc()
             return jsonify({"message": "Internal server error"}), 500
 
     return render_template("login.html")
@@ -62,20 +61,17 @@ def signup():
         try:
             data = request.get_json()
 
-            # Validate input using schema
             validated_data = user_create_schema.load(data)
 
             name = validated_data['name'].strip()
             email = validated_data['email'].strip()
             password = validated_data['password']
 
-            # Check if user already exists
             existing_user = UserModel.query.filter_by(email=email).first()
             if existing_user:
                 flash("User with this email already exists")
                 return jsonify({"detail": "User with this email already exists."}), 409
 
-            # Create new user with hashed password
             new_user = UserModel(
                 email=email,
                 name=name,
@@ -97,9 +93,7 @@ def signup():
         except Exception:
             return jsonify({"detail": "Internal server error."}), 500
 
-    # For GET requests, render the signup page
     return render_template('signup.html')
-
 
 @auth.route('/logout')
 def logout():

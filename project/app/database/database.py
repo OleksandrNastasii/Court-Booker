@@ -5,7 +5,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session, declarative_base
 
 load_dotenv()
-#from ..config.config import DB_route
 print(os.getenv("DATABASE_HOST"))
 engine = create_engine("postgresql://{user}:{password}@{db_host}:5432/{database}".format(
     user = os.getenv("POSTGRESQL_USER"),

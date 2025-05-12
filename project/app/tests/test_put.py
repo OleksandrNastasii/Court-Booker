@@ -3,7 +3,7 @@ import time
 import pytest
 import requests
 
-BASE_URL = "http://192.168.0.66:5000"  # Flask default port
+BASE_URL = "http://192.168.0.66:5000" 
 
 def create_payload():
     return {
@@ -26,7 +26,7 @@ def put_request(payload = create_payload()):
 def wait_for_api(timeout=15):
     for _ in range(timeout):
         try:
-            response = requests.get(f"{BASE_URL}/users")  # or your health endpoint
+            response = requests.get(f"{BASE_URL}/users")
             if response.status_code == 200:
                 return
         except requests.exceptions.ConnectionError:

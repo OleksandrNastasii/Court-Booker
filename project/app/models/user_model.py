@@ -60,7 +60,6 @@ class CourtModel(Base):
     name = Column(String(255), nullable=False, unique=True)
     location = Column(String(255), nullable=True)
 
-    # Optional: link to bookings
     bookings = relationship("BookingModel", back_populates="court")
 
     def show_court(self):
