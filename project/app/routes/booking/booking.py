@@ -1,22 +1,22 @@
 from flask import request, jsonify, send_file, Blueprint
-from flask_login import current_user
+from flask_login import current_user, login_required
 from sqlalchemy.exc import SQLAlchemyError
-from datetime import datetime, timezone
-import time
-import threading
+from datetime import datetime
 import qrcode
 from io import BytesIO
 import uuid
 from zoneinfo import ZoneInfo
 
 from app.database.database import db_session
-from app.models.user_model import BookingModel, CourtModel, UserModel
+from app.models.user_model import BookingModel
+from ..role_decorators import admin_required
 
 polish_tz = ZoneInfo("Europe/Warsaw")
 
 booking = Blueprint('booking', __name__)
 
-@booking.route('/bookings', methods=['POST', 'GET'])
+@booking.route('/bookings', methods=['POST'])
+@login_required
 def create_booking():
     if request.method == "POST":
         data = request.get_json()
@@ -62,6 +62,10 @@ def create_booking():
         img_io.seek(0)
 
         return send_file(img_io, mimetype='image/png')
+
+@booking.route('/bookings', methods=['POST'])
+@admin_required
+def get_booking():
 
     if request.method == "GET":
         try:

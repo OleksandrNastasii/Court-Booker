@@ -10,16 +10,23 @@ class UserModel(UserMixin, Base):
     name = Column(String(255))
     email = Column(String(254), unique=True)
     password = Column(String(255))
+    role = Column(String(255), default="user")
 
     bookings = relationship("BookingModel", back_populates="user")
 
+    def is_admin(self):
+        return self.role == "admin"
+    
+    def is_moderator(self):
+        return self.role == "moderator"
     
     def show_user(self):
         return ({
             "id": self.id,
             "name": self.name,
             "email": self.email,
-            "password": self.password
+            "password": self.password,
+            "role": self.role
             })
 
 class BookingModel(Base):
@@ -50,8 +57,8 @@ class CourtModel(Base):
     __tablename__ = "courts"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False, unique=True)
-    location = Column(String(200), nullable=True)
+    name = Column(String(255), nullable=False, unique=True)
+    location = Column(String(255), nullable=True)
 
     # Optional: link to bookings
     bookings = relationship("BookingModel", back_populates="court")

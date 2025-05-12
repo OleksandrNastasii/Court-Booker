@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, redirect, request, jsonify, flash
+from flask import Blueprint, render_template, redirect, request, jsonify, flash, url_for
 from flask_login import login_user
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 from marshmallow import ValidationError
+import traceback
 
 from ..database.database import db_session
 from ..models.user_model import UserModel
@@ -33,12 +34,21 @@ def login():
                 return jsonify({"message": "Invalid email or password"}), 401
 
             login_user(user)
-            return jsonify({"message": "Login successful"}), 200
+            
+            if user.role == 'admin':
+                redirect_url = url_for("dashboard.admin_dashboard")
+            elif user.role == 'moderator':
+                redirect_url = url_for("dashboard.moderator_dashboard")
+            else:
+                redirect_url = url_for('courts_list.courts_list_page')
+
+            return jsonify({"message": "Login successful", "redirect": redirect_url}), 200
 
         except ValidationError as err:
             return jsonify({"detail": err.messages}), 400
         
         except Exception:
+            traceback.print_exc()  # This logs the actual error to your console
             return jsonify({"message": "Internal server error"}), 500
 
     return render_template("login.html")

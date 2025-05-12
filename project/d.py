@@ -1,7 +1,3 @@
-from datetime import datetime
-from zoneinfo import ZoneInfo
+from werkzeug.security import generate_password_hash
 
-polish_tz = ZoneInfo("Europe/Warsaw")
-x = datetime.now(polish_tz)
-
-print(x)
+print(generate_password_hash("secpassword", method='pbkdf2:sha256'))

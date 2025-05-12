@@ -46,7 +46,13 @@ def create_app():
     from app.routes.booking.verify import verify as verify_blueprint
     app.register_blueprint(verify_blueprint)
 
-    from app.routes.courts import courts_bp
+    from app.routes.courts.courts import courts_bp
     app.register_blueprint(courts_bp)
+
+    from app.routes.courts.list import courts_list_bp
+    app.register_blueprint(courts_list_bp)
+
+    from app.routes.dashboards import dashboard
+    app.register_blueprint(dashboard)
 
     return app

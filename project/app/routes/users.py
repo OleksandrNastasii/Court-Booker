@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_login import login_required
 from werkzeug.security import generate_password_hash
 from sqlalchemy.exc import SQLAlchemyError
 from marshmallow import ValidationError
@@ -6,15 +7,17 @@ from marshmallow import ValidationError
 from app.database.database import db_session
 from app.models.user_model import UserModel
 from app.schemas.user_schemas import UserCreateSchema
+from .role_decorators import admin_required
 
 user_schema = UserCreateSchema()
 
 user = Blueprint('user', __name__)
 
 @user.route('/users', methods=['GET', 'POST'])
+@admin_required
 def get_post():
+
     if request.method == 'GET':
-        # Fetch all users
         try:
             users = UserModel.query.all()
 
@@ -24,10 +27,9 @@ def get_post():
             return jsonify([user.show_user() for user in users]), 200
 
         except Exception:
-            # You can also log the error here for debugging
             return jsonify({"detail": "Internal server error."}), 500
-        
-    elif request.method == 'POST':
+            
+    if request.method == 'POST':
         try:
             data = request.get_json()
 
@@ -36,21 +38,21 @@ def get_post():
             name = validated_data['name'].strip()
             email = validated_data['email'].strip()
             password = validated_data['password']
+            role = validated_data["role"]
 
-            # Check if user with this email already exists
             existing_user = UserModel.query.filter_by(email=email).first()
             if existing_user:
                 return jsonify({"detail": "User with this email already exists."}), 409
 
-            # Create and save new user
             new_user = UserModel(email=email,
                                 name=name,
+                                role=role,
                                 password=generate_password_hash(password, method='pbkdf2:sha256'))
             db_session.add(new_user)
             db_session.commit()
 
             return jsonify(new_user.show_user()), 201
-        
+            
         except ValidationError as err:
             return jsonify({"detail": err.messages}), 422
 
@@ -59,10 +61,10 @@ def get_post():
             return jsonify({"detail": "Database error occurred."}), 500
 
         except Exception as e:
-            # Log the actual error in real apps
             return jsonify({"detail": "Internal server error."}), 500
 
 @user.route('/users/<int:user_id>', methods=['GET', 'PUT', 'DELETE'])
+@admin_required
 def get_put_delete(user_id):
     user = UserModel.query.get(user_id)
     if not user:

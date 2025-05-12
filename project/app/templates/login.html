@@ -69,7 +69,7 @@
 
             if (response.ok) {
                 alert("✅ Login successful!");
-                window.location.href = "{{ url_for('courts.courts_page') }}";
+                window.location.href = result.redirect; // Server-defined redirect
             } else {
                 let message = "Unknown error";
                 if (result.detail) {
@@ -85,7 +85,6 @@
                 }
                 alert("❌ Login failed:\n" + message);
             }
-
         });
     </script>
 
