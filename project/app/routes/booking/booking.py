@@ -63,7 +63,7 @@ def create_booking():
 
         return send_file(img_io, mimetype='image/png')
 
-@booking.route('/bookings', methods=['POST'])
+@booking.route('/bookings', methods=['GET'])
 @admin_required
 def get_booking():
 

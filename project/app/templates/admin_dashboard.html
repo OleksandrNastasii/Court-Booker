@@ -12,20 +12,64 @@
 
     <div class="mt-4">
         <h3>Manage Users</h3>
-        <button class="btn btn-primary" onclick="fetchUsers()">GET Users</button>
-        <button class="btn btn-success" onclick="createUser()">POST User</button>
-        <button class="btn btn-warning" onclick="updateUser()">PUT User</button>
-        <button class="btn btn-danger" onclick="deleteUser()">DELETE User</button>
+        <div class="mb-2">
+            <label for="userId" class="form-label">User ID (for GET, PUT & DELETE):</label>
+            <input type="text" id="userId" class="form-control" placeholder="Enter user ID">
+        </div>
+        <div class="mb-2">
+            <label for="requestBody" class="form-label">Request Body (JSON):</label>
+            <textarea id="requestBody" class="form-control" rows="4"
+                placeholder='{"name":"John Doe", "email":"john@example.com", "password":"securepass", "role":"admin"}'></textarea>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-primary" onclick="fetchUsers()">GET Users</button>
+            <button class="btn btn-secondary" onclick="fetchUserById()">GET User by ID</button>
+            <button class="btn btn-success" onclick="createUser()">POST User</button>
+            <button class="btn btn-warning" onclick="updateUser()">PUT User</button>
+            <button class="btn btn-danger" onclick="deleteUser()">DELETE User</button>
+        </div>
     </div>
 
     <div class="mt-4">
         <h3>Manage Bookings</h3>
-        <button class="btn btn-primary" onclick="fetchBookings()">GET Bookings</button>
+
+        <div class="mb-2">
+            <label for="bookingId" class="form-label">Booking ID (for PUT only):</label>
+            <input type="text" id="bookingId" class="form-control" placeholder="Enter booking ID">
+        </div>
+        <div class="mb-2">
+            <label for="bookingBody" class="form-label">Booking Body (JSON):</label>
+            <textarea id="bookingBody" class="form-control" rows="4"
+                placeholder='{"user_id":1, "court_id":2, "start_time":"2025-05-14T10:00:00", "end_time":"2025-05-14T11:00:00"}'></textarea>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-primary" onclick="fetchBookings()">GET Bookings</button>
+            <button class="btn btn-success" onclick="createBooking()">POST Booking</button>
+            <button class="btn btn-warning" onclick="updateBooking()">PUT Booking</button>
+        </div>
     </div>
 
     <div class="mt-4">
         <h3>Manage Courts</h3>
-        <button class="btn btn-primary" onclick="fetchCourts()">GET Courts</button>
+
+        <div class="mb-2">
+            <label for="courtId" class="form-label">Court ID (for GET, PUT & DELETE):</label>
+            <input type="text" id="courtId" class="form-control" placeholder="Enter court ID">
+        </div>
+        <div class="mb-2">
+            <label for="courtBody" class="form-label">Court Body (JSON):</label>
+            <textarea id="courtBody" class="form-control" rows="3"
+                placeholder='{"name":"Court A", "location":"Zone 1"}'></textarea>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-primary" onclick="fetchCourts()">GET Courts</button>
+            <button class="btn btn-secondary" onclick="fetchCourtById()">GET Court by ID</button>
+            <button class="btn btn-success" onclick="createCourt()">POST Court</button>
+            <button class="btn btn-warning" onclick="updateCourt()">PUT Court</button>
+            <button class="btn btn-danger" onclick="deleteCourt()">DELETE Court</button>
+        </div>
     </div>
 
     <div id="output" class="mt-4 border p-3 bg-light"></div>
@@ -35,32 +79,91 @@
             document.getElementById('output').innerText = JSON.stringify(data, null, 2);
         }
 
+        function getJsonBody() {
+            try {
+                const body = document.getElementById('requestBody').value;
+                return JSON.parse(body);
+            } catch (e) {
+                alert("Invalid JSON body");
+                throw e;
+            }
+        }
+
+        function getUserId() {
+            const id = document.getElementById('userId').value;
+            if (!id) {
+                alert("User ID is required for PUT and DELETE");
+                throw new Error("Missing ID");
+            }
+            return id;
+        }
+
         async function fetchUsers() {
             const res = await fetch('/users');
             showOutput(await res.json());
         }
 
+        async function fetchUserById() {
+            try {
+                const id = getUserId();
+                const res = await fetch(`/users/${id}`);
+                showOutput(await res.json());
+            } catch (_) { }
+        }
+
+
         async function createUser() {
-            const res = await fetch('/users', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: "New User", email: "new@example.com", password: "pass", role: "user" })
-            });
-            showOutput(await res.json());
+            try {
+                const body = getJsonBody();
+                const res = await fetch('/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                showOutput(await res.json());
+            } catch (_) { }
         }
 
         async function updateUser() {
-            const res = await fetch('/users/1', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: "Updated User" })
-            });
-            showOutput(await res.json());
+            try {
+                const id = getUserId();
+                const body = getJsonBody();
+                const res = await fetch(`/users/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                showOutput(await res.json());
+            } catch (_) { }
         }
 
         async function deleteUser() {
-            const res = await fetch('/users/1', { method: 'DELETE' });
-            showOutput(await res.json());
+            try {
+                const id = getUserId();
+                const res = await fetch(`/users/${id}`, {
+                    method: 'DELETE'
+                });
+                showOutput(await res.json());
+            } catch (_) { }
+        }
+
+        function getBookingJsonBody() {
+            try {
+                const body = document.getElementById('bookingBody').value;
+                return JSON.parse(body);
+            } catch (e) {
+                alert("Invalid Booking JSON body");
+                throw e;
+            }
+        }
+
+        function getBookingId(requireId = true) {
+            const id = document.getElementById('bookingId').value.trim();
+            if (requireId && !id) {
+                alert("Booking ID is required for PUT");
+                throw new Error("Missing Booking ID");
+            }
+            return id;
         }
 
         async function fetchBookings() {
@@ -68,9 +171,96 @@
             showOutput(await res.json());
         }
 
+        async function createBooking() {
+            try {
+                const body = getBookingJsonBody();
+                const res = await fetch('/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                showOutput(await res.json());
+            } catch (_) { }
+        }
+
+        async function updateBooking() {
+            try {
+                const id = getBookingId();
+                const body = getBookingJsonBody();
+                const res = await fetch(`/bookings/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                showOutput(await res.json());
+            } catch (_) { }
+        }
+
+        function getCourtJsonBody() {
+            try {
+                const body = document.getElementById('courtBody').value;
+                return JSON.parse(body);
+            } catch (e) {
+                alert("Invalid Court JSON body");
+                throw e;
+            }
+        }
+
+        function getCourtId(requireId = true) {
+            const id = document.getElementById('courtId').value.trim();
+            if (requireId && !id) {
+                alert("Court ID is required");
+                throw new Error("Missing Court ID");
+            }
+            return id;
+        }
+
         async function fetchCourts() {
             const res = await fetch('/courts');
             showOutput(await res.json());
+        }
+
+        async function fetchCourtById() {
+            try {
+                const id = getCourtId();
+                const res = await fetch(`/courts/${id}`);
+                showOutput(await res.json());
+            } catch (_) { }
+        }
+
+        async function createCourt() {
+            try {
+                const body = getCourtJsonBody();
+                const res = await fetch('/courts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                showOutput(await res.json());
+            } catch (_) { }
+        }
+
+        async function updateCourt() {
+            try {
+                const id = getCourtId();
+                const body = getCourtJsonBody();
+                const res = await fetch(`/courts/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                showOutput(await res.json());
+            } catch (_) { }
+        }
+
+        async function deleteCourt() {
+            try {
+                const id = getCourtId();
+                const res = await fetch(`/courts/${id}`, {
+                    method: 'DELETE'
+                });
+                showOutput(await res.json());
+            } catch (_) { }
         }
     </script>
 </body>

@@ -10,7 +10,7 @@ WORKDIR /app/project
 COPY . /app
 
 # Install dependencies (if you have a requirements.txt in your project)
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN pip install -r /app/requirements.txt
 
 # Ensure we're at the correct level (in the parent folder)
 WORKDIR /app

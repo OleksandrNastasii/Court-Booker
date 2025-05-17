@@ -14,7 +14,6 @@ courts_bp = Blueprint("courts", __name__)
 def courts_page():
     
     if request.method == 'GET':
-        # Fetch all users
         try:
             courts = CourtModel.query.all()
 
@@ -24,7 +23,6 @@ def courts_page():
             return jsonify([court.show_court() for court in courts]), 200
 
         except Exception:
-            # You can also log the error here for debugging
             return jsonify({"detail": "Internal server error."}), 500
         
     if request.method == "POST":

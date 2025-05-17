@@ -15,6 +15,7 @@ engine = create_engine("postgresql://{user}:{password}@{db_host}:5432/{database}
 db_session = scoped_session(sessionmaker(autocommit=False, bind=engine))
 
 Base = declarative_base()
+metadata = Base.metadata
 Base.query = db_session.query_property()
 
 def init_db():
