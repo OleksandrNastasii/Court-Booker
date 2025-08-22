@@ -6,7 +6,6 @@ from .database.database import init_db
 from .config.config import Secret_Key
 from app.routes.booking.booking import booking as booking_blueprint
 
-
 load_dotenv()
 
 def create_app():

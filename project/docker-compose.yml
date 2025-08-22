@@ -21,23 +21,23 @@ services:
       - .env
     command: [ "/wait-for-postgres.sh", "db", "gunicorn", "-w", "4", "--timeout", "120", "--bind", "0.0.0.0:5000", "main:app" ]
 
-  checker:
-    build: .
-    restart: always
-    command: [ "./wait-for-postgres.sh", "db", "python", "-m", "app.database.checker" ] # 👈 background task here
-    depends_on:
-      - db
-    env_file:
-      - .env
-    environment:
-      - PYTHONPATH=/app
-      - POSTGRESQL_USER=${POSTGRESQL_USER}
-      - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
-      - POSTGRESQL_DB=${POSTGRESQL_DATABASE}
-      - DATABASE_HOST=${DATABASE_HOST}
-      - POSTGRESQL_DATABASE_PORT=5432
-    networks:
-      - mynetwork
+  # checker:
+  #   build: .
+  #   restart: always
+  #   command: [ "./wait-for-postgres.sh", "db", "python", "-m", "app.database.checker" ]
+  #   depends_on:
+  #     - db
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - PYTHONPATH=/app
+  #     - POSTGRESQL_USER=${POSTGRESQL_USER}
+  #     - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
+  #     - POSTGRESQL_DB=${POSTGRESQL_DATABASE}
+  #     - DATABASE_HOST=${DATABASE_HOST}
+  #     - POSTGRESQL_DATABASE_PORT=5432
+  #   networks:
+  #     - mynetwork
 
   db:
     image: postgres:14

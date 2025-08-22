@@ -1,13 +1,14 @@
-import flask
+import os
 import requests
 import time
 from datetime import datetime, timezone
-from sqlalchemy.orm.exc import DetachedInstanceError
-
+from dotenv import load_dotenv
 
 from ..models.user_model import BookingModel
-from .database import db_session
 
+load_dotenv()
+ip = os.getenv("my_ip")
+port = os.getenv("flask_port")
 
 def update_booking_status():
     while True:
@@ -16,7 +17,7 @@ def update_booking_status():
 
         for booking in bookings:
             booking_id = booking.id
-            BASE_URL = f"http://192.168.0.66:5000/bookings/{booking_id}"
+            BASE_URL = f"http://{ip}:{port}/bookings/{booking_id}"
 
 
             if booking.start_time < now < booking.end_time:

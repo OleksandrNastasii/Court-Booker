@@ -45,9 +45,12 @@
 
         <div class="d-flex flex-wrap gap-2">
             <button class="btn btn-primary" onclick="fetchBookings()">GET Bookings</button>
+            <button class="btn btn-secondary" onclick="fetchBookingById()">GET Booking by ID</button>
             <button class="btn btn-success" onclick="createBooking()">POST Booking</button>
             <button class="btn btn-warning" onclick="updateBooking()">PUT Booking</button>
+            <button class="btn btn-danger" onclick="deleteBooking()">DELETE Booking</button>
         </div>
+
     </div>
 
     <div class="mt-4">
@@ -195,6 +198,25 @@
                 showOutput(await res.json());
             } catch (_) { }
         }
+
+        async function fetchBookingById() {
+            try {
+                const id = getBookingId();
+                const res = await fetch(`/bookings/${id}`);
+                showOutput(await res.json());
+            } catch (_) { }
+        }
+
+        async function deleteBooking() {
+            try {
+                const id = getBookingId();
+                const res = await fetch(`/bookings/${id}`, {
+                    method: 'DELETE'
+                });
+                showOutput(await res.json());
+            } catch (_) { }
+        }
+
 
         function getCourtJsonBody() {
             try {

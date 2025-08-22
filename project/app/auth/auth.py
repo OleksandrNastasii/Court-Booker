@@ -41,7 +41,7 @@ def login():
             else:
                 redirect_url = url_for('courts_list.courts_list_page')
 
-            return jsonify({"message": "Login successful", "redirect": redirect_url}), 200
+            return jsonify({"message": "Login successful", "redirect": redirect_url, "id": f"{user.id}"}), 200
 
         except ValidationError as err:
             return jsonify({"detail": err.messages}), 400
