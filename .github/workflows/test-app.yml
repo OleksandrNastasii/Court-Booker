@@ -24,7 +24,7 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run Container
-      run: docker compose -f docker-compose.yml up -d --build
+      run: docker compose -f /project/docker-compose.yml up -d --build
     - name: Test with pytest
       run: |
         pytest
