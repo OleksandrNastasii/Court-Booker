@@ -23,7 +23,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        pip install pytest
+        python -m pip install pytest
         touch project/.env
         echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > project/.env
         echo "POSTGRESQL_PASSWORD=${{ secrets.POSTGRESQL_PASSWORD }}" >> project/.env
@@ -39,6 +39,20 @@ jobs:
         
     - name: Run Container
       run: docker compose -f project/docker-compose.yml up -d --build
+
+    - name: Wait for Flask app
+      run: |
+        for i in {1..10}; do
+          if curl -s http://localhost:5000/health; then
+            echo "Flask is ready!"
+            exit 0
+          fi
+          echo "Waiting for Flask..."
+          sleep 3
+        done
+        echo "Flask did not start in time"
+        exit 1
+        
     - name: Test with pytest
       run: |
         pytest
