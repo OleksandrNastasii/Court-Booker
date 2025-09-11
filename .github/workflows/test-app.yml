@@ -21,14 +21,14 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        touch .env
-        echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
-        echo "POSTGRESQL_USER=${{ secrets.POSTGRESQL_USER }}" >> .env
-        echo "POSTGRESQL_PASSWORD=${{ secrets.POSTGRESQL_PASSWORD }}" >> .env
-        echo "POSTGRESQL_DATABASE=${{ secrets.POSTGRESQL_DATABASE }}" >> .env
-        echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env
-        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
-        echo "adress=${{ secrets.adress }}" >> .env
+        touch project/.env
+        echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > project/.env
+        echo "POSTGRESQL_USER=${{ secrets.POSTGRESQL_USER }}" >> project/.env
+        echo "POSTGRESQL_PASSWORD=${{ secrets.POSTGRESQL_PASSWORD }}" >> project/.env
+        echo "POSTGRESQL_DATABASE=${{ secrets.POSTGRESQL_DATABASE }}" >> project/.env
+        echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> project/.env
+        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> project/.env
+        echo "adress=${{ secrets.adress }}" >> project/.env
         echo "admin_credentails=${{ secrets.admin_credentails }}" >> $GITHUB_ENV
         echo "user_credentails_1=${{ secrets.user_credentails_1 }}" >> $GITHUB_ENV
         echo "user_credentails_2=${{ secrets.user_credentails_2 }}" >> $GITHUB_ENV
