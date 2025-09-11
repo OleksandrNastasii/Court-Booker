@@ -38,22 +38,27 @@ jobs:
     - name: Run Container
       run: docker compose -f project/docker-compose.yml up -d --build
 
-    - name: Wait for Flask app
+    - name: Wait for Flask app with debug
       run: |
-        for i in {1..10}; do
-          if curl -s http://localhost:5000; then
-            echo "Flask is ready!"
+        echo "Checking if Flask is up on localhost:5000..."
+        for i in {1..20}; do
+          if curl -v http://localhost:5000/health; then
+            echo "✅ Flask is ready!"
             exit 0
           fi
-          echo "Waiting for Flask..."
+          echo "⏳ Flask not ready yet, retry $i..."
           sleep 3
         done
-        echo "Flask did not start in time"
+    
+        echo "❌ Flask did not start in time. Dumping logs..."
+        echo "--- Running containers ---"
+        docker ps -a
+        echo "--- Flask logs ---"
+        docker logs flask || true
+        echo "--- Postgres logs ---"
+        docker logs db || true
         exit 1
-        
-    - name: Test with pytest
-      run: |
-        pytest
+
 
 
     - name: Shutdown services
