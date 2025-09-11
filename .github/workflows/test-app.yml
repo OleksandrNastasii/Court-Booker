@@ -22,18 +22,18 @@ jobs:
     - name: Install dependencies
       run: |
         touch project/.env
-        echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > project/.env
-        echo "POSTGRESQL_USER=${{ secrets.POSTGRESQL_USER }}" >> project/.env
-        echo "POSTGRESQL_PASSWORD=${{ secrets.POSTGRESQL_PASSWORD }}" >> project/.env
-        echo "POSTGRESQL_DATABASE=${{ secrets.POSTGRESQL_DATABASE }}" >> project/.env
-        echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> project/.env
-        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> project/.env
-        echo "adress=${{ secrets.adress }}" >> project/.env
-        echo "admin_credentails=${{ secrets.admin_credentails }}" >> project/.env
-        echo "user_credentails_1=${{ secrets.user_credentails_1 }}" >> project/.env
-        echo "user_credentails_2=${{ secrets.user_credentails_2 }}" >> project/.env
-        echo "court_credentials_1=${{ secrets.court_credentials_1 }}" >> project/.env
-        echo "court_credentials_2=${{ secrets.court_credentials_2 }}" >> project/.env
+        echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > $GITHUB_ENV
+        echo "POSTGRESQL_USER=${{ secrets.POSTGRESQL_USER }}" >> $GITHUB_ENV
+        echo "POSTGRESQL_PASSWORD=${{ secrets.POSTGRESQL_PASSWORD }}" >> $GITHUB_ENV
+        echo "POSTGRESQL_DATABASE=${{ secrets.POSTGRESQL_DATABASE }}" >> $GITHUB_ENV
+        echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> $GITHUB_ENV
+        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+        echo "adress=${{ secrets.adress }}" >> $GITHUB_ENV
+        echo "admin_credentails=${{ secrets.admin_credentails }}" >> $GITHUB_ENV
+        echo "user_credentails_1=${{ secrets.user_credentails_1 }}" >> $GITHUB_ENV
+        echo "user_credentails_2=${{ secrets.user_credentails_2 }}" >> $GITHUB_ENV
+        echo "court_credentials_1=${{ secrets.court_credentials_1 }}" >> $GITHUB_ENV
+        echo "court_credentials_2=${{ secrets.court_credentials_2 }}" >> $GITHUB_ENV
 
                     
     - name: Run Container
