@@ -54,8 +54,10 @@ jobs:
     
         echo "Flask did not start in time. Dumping logs..."
 
+    - name: Run Pytest
+      run: | 
+        cd project/app/tests
+        pytest -v
+        
     - name: Shutdown services
       run: docker compose -f project/docker-compose.yml down
-
-    - name: Run Pytest
-      run: pytest -v
