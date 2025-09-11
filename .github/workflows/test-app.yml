@@ -53,7 +53,9 @@ jobs:
         echo "Flask did not start in time. Dumping logs..."
 
     - name: Run Pytest
-      run: docker exec flask pytest -v
+      run: |
+        docker exec flask project/app/admin/add_admin.py 
+        docker exec flask pytest -v
         
     - name: Shutdown services
       run: docker compose -f project/docker-compose.yml down
