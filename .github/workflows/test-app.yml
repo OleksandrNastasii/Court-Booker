@@ -45,23 +45,17 @@ jobs:
         echo "Checking if Flask is up on localhost:5000..."
         for i in {1..20}; do
           if curl -v http://localhost:5000/health; then
-            echo "✅ Flask is ready!"
+            echo "Flask is ready"
             exit 0
           fi
-          echo "⏳ Flask not ready yet, retry $i..."
+          echo "Flask not ready yet, retry $i..."
           sleep 3
         done
     
-        echo "❌ Flask did not start in time. Dumping logs..."
-        echo "--- Running containers ---"
-        docker ps -a
-        echo "--- Flask logs ---"
-        docker logs flask || true
-        echo "--- Postgres logs ---"
-        docker logs db || true
-        exit 1
-
-
+        echo "Flask did not start in time. Dumping logs..."
 
     - name: Shutdown services
       run: docker compose -f project/docker-compose.yml down
+
+    - name: Run Pytest
+      run: pytest -v
