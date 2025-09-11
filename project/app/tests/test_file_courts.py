@@ -8,12 +8,12 @@ import pytest
 load_dotenv()
 
 headers = {"Content-Type": "application/json"}
-admin_credentials = json.loads(os.getenv("admin_credentails"))
-court_credentials_1 = json.loads(os.getenv("court_credentials_1"))
-court_credentials_2 = json.loads(os.getenv("court_credentials_2"))
+admin_credentials = json.loads(os.environ["admin_credentails"])
+court_credentials_1 = json.loads(os.environ["court_credentials_1"])
+court_credentials_2 = json.loads(os.environ["court_credentials_2"])
 
 
-BASE_URL = os.getenv("adress")
+BASE_URL = os.environ["adress"]
 
 courts_url = f"{BASE_URL}/courts"
 

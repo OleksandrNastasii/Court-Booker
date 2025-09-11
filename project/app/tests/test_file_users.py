@@ -7,12 +7,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 headers = {"Content-Type": "application/json"}
-admin_credentials = json.loads(os.getenv("admin_credentails"))
-user_credentials_1 = json.loads(os.getenv("user_credentails_1"))
-user_credentials_2 = json.loads(os.getenv("user_credentails_2"))
+admin_credentials = json.loads(os.environ["admin_credentails"])
+user_credentials_1 = json.loads(os.environ["user_credentails_1"])
+user_credentials_2 = json.loads(os.environ["user_credentails_2"])
 
 
-BASE_URL = os.getenv("adress")
+BASE_URL = os.environ["adress"]
 
 users_url = f"{BASE_URL}/users"
 
