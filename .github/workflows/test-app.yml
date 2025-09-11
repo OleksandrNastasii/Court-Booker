@@ -29,11 +29,12 @@ jobs:
         echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> project/.env
         echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> project/.env
         echo "adress=${{ secrets.adress }}" >> project/.env
-        printf "admin_credentails='%s'\n" "${{ secrets.admin_credentails }}" >> project/.env
-        printf "user_credentails_1='%s'\n" "${{ secrets.user_credentails_1 }}" >> project/.env
-        printf "user_credentails_2='%s'\n" "${{ secrets.user_credentails_2 }}" >> project/.env
-        printf "court_credentials_1='%s'\n" "${{ secrets.court_credentials_1 }}" >> project/.env
-        printf "court_credentials_2='%s'\n" "${{ secrets.court_credentials_2 }}" >> project/.env
+        echo "admin_credentails=${{ secrets.admin_credentails }}" >> project/.env
+        echo "user_credentails_1=${{ secrets.user_credentails_1 }}" >> project/.env
+        echo "user_credentails_2=${{ secrets.user_credentails_2 }}" >> project/.env
+        echo "court_credentials_1=${{ secrets.court_credentials_1 }}" >> project/.env
+        echo "court_credentials_2=${{ secrets.court_credentials_2 }}" >> project/.env
+
                     
     - name: Run Container
       run: docker compose -f project/docker-compose.yml up -d --build
