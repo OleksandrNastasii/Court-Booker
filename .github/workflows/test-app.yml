@@ -24,6 +24,8 @@ jobs:
         python -m pip install pytest
         touch project/.env
         echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > project/.env
+        echo "POSTGRESQL_USER=${{ secrets.POSTGRESQL_USER }}" >> project/.env
+        
         echo "POSTGRESQL_PASSWORD=${{ secrets.POSTGRESQL_PASSWORD }}" >> project/.env
         echo "POSTGRESQL_DATABASE=${{ secrets.POSTGRESQL_DATABASE }}" >> project/.env
         echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> project/.env
