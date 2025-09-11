@@ -1,0 +1,67 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Api calls
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: Test 
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        touch project/.env
+        echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > project/.env
+        echo "POSTGRESQL_USER=${{ secrets.POSTGRESQL_USER }}" >> project/.env
+        echo "POSTGRESQL_PASSWORD=${{ secrets.POSTGRESQL_PASSWORD }}" >> project/.env
+        echo "POSTGRESQL_DATABASE=${{ secrets.POSTGRESQL_DATABASE }}" >> project/.env
+        echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> project/.env
+        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> project/.env
+        echo "adress=${{ secrets.adress }}" >> project/.env
+        echo "admin_credentails=${{ secrets.admin_credentails }}" >> project/.env
+        echo "user_credentails_1=${{ secrets.user_credentails_1 }}" >> project/.env
+        echo "user_credentails_2=${{ secrets.user_credentails_2 }}" >> project/.env
+        echo "court_credentials_1=${{ secrets.court_credentials_1 }}" >> project/.env
+        echo "court_credentials_2=${{ secrets.court_credentials_2 }}" >> project/.env
+
+                    
+    - name: Run Container
+      run: docker compose -f project/docker-compose.yml up -d --build
+
+    - name: Wait for Flask app with debug
+      run: |
+        echo "Checking if Flask is up on localhost:5000..."
+        for i in {1..20}; do
+          if curl -v http://localhost:5000/health; then
+            echo "Flask is ready"
+            exit 0
+          fi
+          echo "Flask not ready yet, retry $i..."
+          sleep 3
+        done
+    
+        echo "Flask did not start in time. Dumping logs..."
+
+    - name: Run Pytest
+      run: |
+        docker exec flask env | grep credentails
+        docker exec flask ls app/admin
+        docker exec flask python -m app.admin.add_admin
+        
+        
+
+        docker exec flask pytest -v
+        
+    - name: Shutdown services
+      run: docker compose -f project/docker-compose.yml down
