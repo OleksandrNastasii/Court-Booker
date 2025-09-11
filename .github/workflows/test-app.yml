@@ -54,6 +54,7 @@ jobs:
 
     - name: Run Pytest
       run: |
+        docker exec flask env | grep credentails
         docker exec flask ls app/admin
         docker exec flask python -m app.admin.add_admin
         
