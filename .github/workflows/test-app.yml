@@ -54,7 +54,7 @@ jobs:
 
     - name: Run Pytest
       run: |
-        docker exec flask project/app/admin/add_admin.py 
+        docker exec flask python /app/admin/add_admin.py
         docker exec flask pytest -v
         
     - name: Shutdown services
