@@ -54,9 +54,7 @@ jobs:
 
     - name: Run Pytest
       run: |
-        docker exec flask pwd       
-        docker exec flask ls        
-        docker exec flask find / -name add_admin.py
+        docker exec flask python project/app/admin/add_admin.py
 
         docker exec flask pytest -v
         
