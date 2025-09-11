@@ -54,7 +54,7 @@ jobs:
 
     - name: Run Pytest
       run: |
-        docker exec falsk ls app/admin
+        docker exec flask ls app/admin
         docker exec flask python app/admin/add_admin.py
         
         
