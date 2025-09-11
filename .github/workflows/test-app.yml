@@ -56,7 +56,9 @@ jobs:
       run: |
         docker exec flask pwd
         docker exec flask ls
-        docker exec flask ls /project
+        docker exec flask ls project
+        docker exec flask ls app
+        
 
         docker exec flask pytest -v
         
