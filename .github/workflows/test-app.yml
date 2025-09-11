@@ -43,7 +43,7 @@ jobs:
       run: |
         echo "Checking if Flask is up on localhost:5000..."
         for i in {1..20}; do
-          if curl -v http://localhost:5000/health; then
+          if curl -v http://localhost:5000; then
             echo "Flask is ready"
             exit 0
           fi
