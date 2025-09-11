@@ -21,11 +21,9 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        python -m pip install pytest Flask
         touch project/.env
         echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > project/.env
         echo "POSTGRESQL_USER=${{ secrets.POSTGRESQL_USER }}" >> project/.env
-        
         echo "POSTGRESQL_PASSWORD=${{ secrets.POSTGRESQL_PASSWORD }}" >> project/.env
         echo "POSTGRESQL_DATABASE=${{ secrets.POSTGRESQL_DATABASE }}" >> project/.env
         echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> project/.env
@@ -55,9 +53,7 @@ jobs:
         echo "Flask did not start in time. Dumping logs..."
 
     - name: Run Pytest
-      run: | 
-        cd project/app/tests
-        pytest -v
+      run: docker exec flask pytest
         
     - name: Shutdown services
       run: docker compose -f project/docker-compose.yml down
