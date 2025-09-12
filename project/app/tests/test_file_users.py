@@ -8,8 +8,8 @@ load_dotenv()
 
 headers = {"Content-Type": "application/json"}
 admin_credentials = json.loads(os.environ["admin_credentials"])
-user_credentials_1 = json.loads(os.environ["user_credentails_1"])
-user_credentials_2 = json.loads(os.environ["user_credentails_2"])
+user_credentials_1 = json.loads(os.environ["user_credentials_1"])
+user_credentials_2 = json.loads(os.environ["user_credentials_2"])
 
 
 BASE_URL = os.environ["adress"]
