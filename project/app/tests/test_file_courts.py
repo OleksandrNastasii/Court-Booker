@@ -8,7 +8,7 @@ import pytest
 load_dotenv()
 
 headers = {"Content-Type": "application/json"}
-admin_credentials = json.loads(os.environ["admin_credentails"])
+admin_credentials = json.loads(os.environ["admin_credentials"])
 court_credentials_1 = json.loads(os.environ["court_credentials_1"])
 court_credentials_2 = json.loads(os.environ["court_credentials_2"])
 

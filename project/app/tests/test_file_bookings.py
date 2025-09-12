@@ -9,7 +9,7 @@ from app.tests.test_file_courts import courts_url, court_credentials_1
 load_dotenv()
 
 headers = {"Content-Type": "application/json"}
-admin_credentials = json.loads(os.environ["admin_credentails"])
+admin_credentials = json.loads(os.environ["admin_credentials"])
 
 BASE_URL = os.environ["adress"]
 
