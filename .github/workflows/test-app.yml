@@ -29,8 +29,8 @@ jobs:
         echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> project/.env
         echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> project/.env
         echo "adress=${{ secrets.adress }}" >> project/.env
-        echo "user_credentails_1=$(echo '${{ secrets.user_credentails_1 }}' | jq -c .)" >> project/.env
-        echo "user_credentails_2=$(echo '${{ secrets.user_credentails_2 }}' | jq -c .)" >> project/.env
+        echo "user_credentials_1=$(echo '${{ secrets.user_credentials_1 }}' | jq -c .)" >> project/.env
+        echo "user_credentials_2=$(echo '${{ secrets.user_credentials_2 }}' | jq -c .)" >> project/.env
         echo "court_credentials_1=$(echo '${{ secrets.court_credentials_1 }}' | jq -c .)" >> project/.env
         echo "court_credentials_2=$(echo '${{ secrets.court_credentials_2 }}' | jq -c .)" >> project/.env
         echo "admin_credentials=$(echo '${{ secrets.admin_credentials }}' | jq -c .)" >> project/.env
@@ -60,12 +60,7 @@ jobs:
 
     - name: Run Pytest
       run: |
-        docker exec flask env | grep credentails
-        docker exec flask ls app/admin
         docker exec flask python -m app.admin.add_admin
-        
-        
-
         docker exec flask pytest -v
         
     - name: Shutdown services
