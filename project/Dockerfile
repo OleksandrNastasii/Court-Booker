@@ -9,6 +9,16 @@ WORKDIR /app/project
 # Copy your project folder into the container
 COPY . /app
 
+# Install tzdata for timezone support
+RUN apt-get update && \
+    apt-get install -y tzdata && \
+    ln -fs /usr/share/zoneinfo/Europe/Warsaw /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Set the TZ environment variable
+ENV TZ=Europe/Warsaw
+
 # Install dependencies (if you have a requirements.txt in your project)
 RUN pip install -r /app/requirements.txt
 
