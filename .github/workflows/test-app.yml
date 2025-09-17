@@ -53,11 +53,6 @@ jobs:
     
         echo "Flask did not start in time. Dumping logs..."
 
-    - name: Check
-      run: |
-        docker ps -a
-        docker logs flask
-
     - name: Run Pytest
       run: |
         docker exec flask python -m app.admin.add_admin
