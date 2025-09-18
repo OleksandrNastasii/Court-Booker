@@ -62,4 +62,5 @@ jobs:
       run: docker compose -f project/docker-compose.yml down
 
     -name: Something
+     run: exit 1  
 
