@@ -14,15 +14,15 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     environment: deploy
+    env:
+      DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     steps:
 
       - uses: actions/checkout@v3
       
       - name: Login to Docker HUB
-        env:
-          DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD 
 
       - name: Build image
@@ -30,5 +30,3 @@ jobs:
 
       - name: Push to Docker HUB 
         run: docker push $DOCKER_LOGIN/flask-app:latest
-        
-      
