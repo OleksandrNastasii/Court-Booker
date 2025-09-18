@@ -25,6 +25,8 @@ jobs:
         run: docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD 
 
       - name: Build image
+        env:
+          DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
         run: docker build -t $DOCKER_LOGIN/flask-app:latest ./project
 
       - name: Push to Docker HUB 
