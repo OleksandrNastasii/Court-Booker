@@ -30,4 +30,5 @@ jobs:
 
       - name: Push to Docker HUB 
         run: docker push $DOCKER_LOGIN/flask-app:latest
+        
       
