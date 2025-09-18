@@ -2,7 +2,7 @@ name: Docker Deploy
 
 on:
   workflow_run:
-    workflows: ["CI build"]
+    workflows: ["Test"]
     types:
       - completed
 
