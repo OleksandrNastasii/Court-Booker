@@ -60,3 +60,6 @@ jobs:
         
     - name: Shutdown services
       run: docker compose -f project/docker-compose.yml down
+
+    -name: Something
+
