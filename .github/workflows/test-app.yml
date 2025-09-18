@@ -21,7 +21,6 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        exit 1
         touch project/.env
         echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > project/.env
         echo "POSTGRESQL_USER=${{ secrets.POSTGRESQL_USER }}" >> project/.env
