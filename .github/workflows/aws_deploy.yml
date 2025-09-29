@@ -1,0 +1,23 @@
+name: AWS Deploy
+
+on:
+  workflow_run:
+    workflows: ["Docker Deploy"]
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: deploy
+    env:
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      AWS_MACHINE_USER: ${{ secrets.AWS_MACHINE_USER }}
+
+    steps:
+
+      - uses: actions/checkout@v3
