@@ -33,7 +33,21 @@ jobs:
           touch key.pem
           echo "${SSH_KEY}" > key.pem
           chmod 600 key.pem
-          ssh -i "key.pem" $AWS_MACHINE_USER@$AWS_MACHINE_HOST "cd app && docker-compose down && docker-compose up --build -d && curl http://localhost:5000"
+          ssh -i "key.pem" $AWS_MACHINE_USER@$AWS_MACHINE_HOST "
+            cd app &&
+            docker-compose down &&
+            docker-compose up --build -d &&
+            for i in {0..10}; do
+              if curl http://localhost:5000 > /dev/null; then
+                echo "Flask is up";
+                exit 0;
+              fi
+              echo "Waiting for Flask...";
+              sleep 5;
+            done;
+            echo "Flask did not start";
+            exit 1
+            "
 
       # - name: Stop Service
       #   run: |
