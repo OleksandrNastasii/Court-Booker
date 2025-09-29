@@ -26,7 +26,7 @@ jobs:
       - name: SSH Remote Machine
         run: |
           touch key.pem
-          echo $SSH_KEY > key.pem
+          echo "${SSH_KEY}" > key.pem
           ssh -i "key.pem" $AWS_MACHINE_USER@$AWS_MACHINE_HOST
 
       - name: Stop Service
