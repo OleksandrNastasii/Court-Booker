@@ -17,7 +17,24 @@ jobs:
     env:
       SSH_KEY: ${{ secrets.SSH_KEY }}
       AWS_MACHINE_USER: ${{ secrets.AWS_MACHINE_USER }}
+      AWS_MACHINE_HOST: ${{ secrets.AWS_MACHINE_HOST }}
 
     steps:
 
       - uses: actions/checkout@v3
+
+      - name: SSH Remote Machine
+        run: |
+          touch key.pem
+          echo $SSH_KEY > key.pem
+          ssh -i "key.pem" $AWS_MACHINE_USER@$AWS_MACHINE_HOST
+
+      - name: Stop Service
+        run: |
+          cd app
+          docker-compose down
+      - name: Run Service
+        run : docker-compose up --build -d
+
+      - name: Health Check
+        run: curl http://localhost:5000
