@@ -32,6 +32,7 @@ jobs:
         run: |
           touch key.pem
           echo "${SSH_KEY}" > key.pem
+          chmod 600 key.pem
           ssh -i "key.pem" $AWS_MACHINE_USER@$AWS_MACHINE_HOST
 
       - name: Stop Service
