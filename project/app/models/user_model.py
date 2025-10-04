@@ -4,16 +4,21 @@ from ..database.database import Base
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
+# Creates table "users" in database
 class UserModel(UserMixin, Base):
     __tablename__ = "users"
+
+    #Assigns table values
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
     email = Column(String(254), unique=True)
     password = Column(String(255))
     role = Column(String(255), default="user")
 
+    #Creates relationship with table "booking"
     bookings = relationship("BookingModel", back_populates="user")
 
+    #Checks what access rights user has
     def is_admin(self):
         return self.role == "admin"
     
@@ -29,8 +34,11 @@ class UserModel(UserMixin, Base):
             "role": self.role
             })
 
+#Creates table "booking" in database
 class BookingModel(Base):
     __tablename__ = "booking"
+
+    #Assigns table values
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     court_id = Column(Integer, ForeignKey('courts.id'), nullable=False)
@@ -39,6 +47,7 @@ class BookingModel(Base):
     token = Column(String(255), unique=True)
     status = Column(Boolean, default=True)
 
+    #Creates relationship with tables "booking" and "courts"
     user = relationship("UserModel", back_populates="bookings")
     court = relationship("CourtModel", back_populates="bookings")
 
